@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
 
 //translate the brainfuck code to c
@@ -10,6 +11,7 @@ void translate(FILE * fp){
   fputs("int main(){\n", fpc);
   fputs("char array[9000] = {0};\n", fpc);
   fputs("char *ptr=array;\n", fpc);
+  fputs("char *head=array;\n", fpc);
   while((c =fgetc(fp))!= EOF){
     switch(c){
       case '>': fputs("++ptr;\n", fpc);
@@ -24,7 +26,7 @@ void translate(FILE * fp){
                 break;
       case ',': fputs("*ptr=getchar();\n", fpc);
                 break;
-      case '[': fputs("while(*ptr){\n", fpc);
+      case '[': fputs("while( (ptr-head < 9000) && (ptr-head >= 0) && *ptr ){\n", fpc);
                 break;
       case ']': fputs("}\n", fpc);
                 break;
